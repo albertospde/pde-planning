@@ -1112,19 +1112,29 @@ async function exportExcel() {
   hideLoading();
 
   const allMonths = new Set(Object.keys(monthsPresence));
-  trasferteData.forEach(r => allMonths.add(r.dal.slice(0,7)));
-  incontriData.forEach(r => allMonths.add(r.data.slice(0,7)));
+  trasferteData.forEach(r => { if(r.dal && r.dal.length>=7) allMonths.add(r.dal.slice(0,7)); });
+  incontriData.forEach(r => { if(r.data && r.data.length>=7) allMonths.add(r.data.slice(0,7)); });
 
-  if (!allMonths.size) {
+  // Filter out invalid month keys
+  const validMonths = [...allMonths].filter(m => /^\d{4}-\d{2}$/.test(m) && m >= '2024-01');
+
+  if (!validMonths.length) {
     alert('Nessun dato da esportare. Inserisci prima alcune presenze, trasferte o incontri.');
     return;
   }
 
-  const sortedMonths = [...allMonths].sort();
+  const sortedMonths = validMonths.sort();
 
+  const usedSheetNames = new Set();
   sortedMonths.forEach(mKey => {
     const [yr, mo] = mKey.split('-').map(Number);
-    const sheetName = (MONTH_NAMES[mo-1] + ' ' + yr).slice(0,31);
+    if (!yr || !mo || mo < 1 || mo > 12) return;
+    let sheetName = (MONTH_NAMES[mo-1] + ' ' + yr).slice(0,31);
+    // Deduplicate sheet names
+    let finalName = sheetName;
+    let counter = 2;
+    while (usedSheetNames.has(finalName)) { finalName = (sheetName + ' ' + counter).slice(0,31); counter++; }
+    usedSheetNames.add(finalName);
 
     const ws = {};
     let row = 0;
@@ -1214,7 +1224,7 @@ async function exportExcel() {
     ws['!cols'] = [{wch:22},{wch:14},{wch:14},{wch:14},{wch:14},{wch:14},{wch:14},{wch:14},{wch:14},{wch:14},{wch:14},{wch:14},{wch:14},{wch:14},{wch:14},{wch:14},{wch:14},{wch:14},{wch:14},{wch:14},{wch:14},{wch:14},{wch:14},{wch:14},{wch:14},{wch:14},{wch:14},{wch:14},{wch:14},{wch:14},{wch:14},{wch:14},{wch:14},{wch:14},{wch:14}];
     ws['!rows'] = Array.from({length:row+1}, () => ({hpt:18}));
 
-    XLSX.utils.book_append_sheet(wb, ws, sheetName);
+    XLSX.utils.book_append_sheet(wb, ws, finalName);
   });
 
   XLSX.writeFile(wb, 'Planning_PDE_' + new Date().getFullYear() + '.xlsx');
