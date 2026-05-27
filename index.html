@@ -126,6 +126,13 @@
   .badge.permesso   { background: var(--permesso-bg); border-color: var(--permesso-border); color: var(--permesso-text); }
   .badge.sesw       { background: var(--sesw-bg); border-color: var(--sesw-border); color: var(--sesw-text); }
   .badge.seufc      { background: var(--seufc-bg); border-color: var(--seufc-border); color: var(--seufc-text); }
+  .badge.uffse      { background: var(--uffse-bg); border-color: var(--uffse-border); color: var(--uffse-text); }
+  .badge.permsw     { background: var(--permsw-bg); border-color: var(--permsw-border); color: var(--permsw-text); }
+  .badge.swperm     { background: var(--swperm-bg); border-color: var(--swperm-border); color: var(--swperm-text); }
+  .badge.seperm     { background: var(--seperm-bg); border-color: var(--seperm-border); color: var(--seperm-text); }
+  .badge.permse     { background: var(--permse-bg); border-color: var(--permse-border); color: var(--permse-text); }
+  .badge.ufcperm    { background: var(--ufcperm-bg); border-color: var(--ufcperm-border); color: var(--ufcperm-text); }
+  .badge.permfc     { background: var(--permfc-bg); border-color: var(--permfc-border); color: var(--permfc-text); }
 
   .add-btn { display: inline-flex; align-items: center; justify-content: center; width: 24px; height: 24px; border-radius: 50%; border: 1.5px dashed var(--border); background: transparent; color: var(--text-muted); font-size: 16px; cursor: pointer; transition: all 0.15s; }
   .add-btn:hover { border-color: var(--accent-light); color: var(--accent-light); background: rgba(74,110,196,0.06); }
@@ -149,6 +156,13 @@
   .type-option.permesso { background: var(--permesso-bg); border-color: var(--permesso-border); color: var(--permesso-text); }
   .type-option.sesw     { background: var(--sesw-bg); border-color: var(--sesw-border); color: var(--sesw-text); }
   .type-option.seufc    { background: var(--seufc-bg); border-color: var(--seufc-border); color: var(--seufc-text); }
+  .type-option.uffse    { background: var(--uffse-bg); border-color: var(--uffse-border); color: var(--uffse-text); }
+  .type-option.permsw   { background: var(--permsw-bg); border-color: var(--permsw-border); color: var(--permsw-text); }
+  .type-option.swperm   { background: var(--swperm-bg); border-color: var(--swperm-border); color: var(--swperm-text); }
+  .type-option.seperm   { background: var(--seperm-bg); border-color: var(--seperm-border); color: var(--seperm-text); }
+  .type-option.permse   { background: var(--permse-bg); border-color: var(--permse-border); color: var(--permse-text); }
+  .type-option.ufcperm  { background: var(--ufcperm-bg); border-color: var(--ufcperm-border); color: var(--ufcperm-text); }
+  .type-option.permfc   { background: var(--permfc-bg); border-color: var(--permfc-border); color: var(--permfc-text); }
   .type-option.selected::after { content: ' ✓'; }
 
   .field { margin-bottom: 12px; }
@@ -556,11 +570,20 @@ const TYPES = [
   { key:"permesso", label:"📋 Permesso",          cls:"permesso", needsNote:false },
   { key:"sesw",     label:"🚗🏠 SE+SW",           cls:"sesw",     needsNote:true  },
   { key:"seufc",    label:"🚗🏢 SE+Ufficio",      cls:"seufc",    needsNote:true  },
+  { key:"uffse",    label:"🏢🚗 Ufficio+SE",      cls:"uffse",    needsNote:true  },
+  { key:"permsw",   label:"📋🏠 Permesso+SW",     cls:"permsw",   needsNote:false },
+  { key:"swperm",   label:"🏠📋 SW+Permesso",     cls:"swperm",   needsNote:false },
+  { key:"seperm",   label:"🚗📋 SE+Permesso",     cls:"seperm",   needsNote:true  },
+  { key:"permse",   label:"📋🚗 Permesso+SE",     cls:"permse",   needsNote:true  },
+  { key:"ufcperm",  label:"🏢📋 Ufficio+Permesso",cls:"ufcperm",  needsNote:false },
+  { key:"permfc",   label:"📋🏢 Permesso+Ufficio",cls:"permfc",   needsNote:false },
 ];
 
 const SHORT = {
   ufficio:"Ufficio", sw:"Smartworking", se:"Servizio Esterno", ferie:"Ferie",
-  permesso:"Permesso", sesw:"SE + Smartworking", seufc:"SE + Ufficio"
+  permesso:"Permesso", sesw:"SE + Smartworking", seufc:"SE + Ufficio",
+  uffse:"Ufficio + SE", permsw:"Permesso + SW", swperm:"SW + Permesso",
+  seperm:"SE + Permesso", permse:"Permesso + SE", ufcperm:"Ufficio + Permesso", permfc:"Permesso + Ufficio"
 };
 
 // ─── STATO ──────────────────────────────────────────────
@@ -1074,7 +1097,8 @@ async function exportExcel() {
   const DAY_IT = ['Lun','Mar','Mer','Gio','Ven','Sab','Dom'];
   const TYPE_LABELS = {
     ufficio:'Ufficio', sw:'Smartworking', se:'Servizio Esterno',
-    ferie:'Ferie', permesso:'Permesso', sesw:'SE + Smartworking', seufc:'SE + Ufficio'
+    ferie:'Ferie', permesso:'Permesso', sesw:'SE + Smartworking', seufc:'SE + Ufficio',
+    uffse:'Ufficio + SE', permsw:'Permesso + SW', swperm:'SW + Permesso', seperm:'SE + Permesso', permse:'Permesso + SE', ufcperm:'Ufficio + Permesso', permfc:'Permesso + Ufficio'
   };
 
   // ── Styles ──
@@ -1090,6 +1114,7 @@ async function exportExcel() {
     ufficio:{bg:'DDE8FA',fg:'1A2E6B'}, sw:{bg:'E8EDF8',fg:'2A3A6B'},
     se:{bg:'FEF3E2',fg:'6B3A0A'},     ferie:{bg:'D6F0D6',fg:'1A5C1A'},
     permesso:{bg:'B8DDB8',fg:'0D3B0D'}, sesw:{bg:'FFF0CC',fg:'5A3D00'},
+    uffse:{bg:'E8D8F8',fg:'3A0070'}, permsw:{bg:'CCE8F0',fg:'003A50'}, swperm:{bg:'CCE8F0',fg:'003A50'}, seperm:{bg:'FFD8B8',fg:'5A1800'}, permse:{bg:'FFD8B8',fg:'5A1800'}, ufcperm:{bg:'D8E8D8',fg:'0A300A'}, permfc:{bg:'D8E8D8',fg:'0A300A'},
     seufc:{bg:'FDE8CC',fg:'5A2D00'}
   };
   function sType(type) {
