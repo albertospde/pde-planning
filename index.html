@@ -133,6 +133,7 @@
   .badge.permse     { background: #f8c8a0; border-color: #a04000; color: #401000; }
   .badge.ufcperm    { background: #d8e8d8; border-color: #3a7a3a; color: #0a300a; }
   .badge.permfc     { background: #c0d8c0; border-color: #2a6a2a; color: #062006; }
+  .badge.festivita  { background: #fce4ec; border-color: #e91e63; color: #880e4f; }
 
   .add-btn { display: inline-flex; align-items: center; justify-content: center; width: 24px; height: 24px; border-radius: 50%; border: 1.5px dashed var(--border); background: transparent; color: var(--text-muted); font-size: 16px; cursor: pointer; transition: all 0.15s; }
   .add-btn:hover { border-color: var(--accent-light); color: var(--accent-light); background: rgba(74,110,196,0.06); }
@@ -163,6 +164,7 @@
   .type-option.permse   { background: #f8c8a0; border-color: #a04000; color: #401000; }
   .type-option.ufcperm  { background: #d8e8d8; border-color: #3a7a3a; color: #0a300a; }
   .type-option.permfc   { background: #c0d8c0; border-color: #2a6a2a; color: #062006; }
+  .type-option.festivita { background: #fce4ec; border-color: #e91e63; color: #880e4f; }
   .type-option.selected::after { content: ' ✓'; }
 
   .field { margin-bottom: 12px; }
@@ -577,13 +579,15 @@ const TYPES = [
   { key:"permse",   label:"📋🚗 Permesso+SE",     cls:"permse",   needsNote:true  },
   { key:"ufcperm",  label:"🏢📋 Ufficio+Permesso",cls:"ufcperm",  needsNote:false },
   { key:"permfc",   label:"📋🏢 Permesso+Ufficio",cls:"permfc",   needsNote:false },
+  { key:"festivita", label:"🎉 Festività",          cls:"festivita", needsNote:false },
 ];
 
 const SHORT = {
   ufficio:"Ufficio", sw:"Smartworking", se:"Servizio Esterno", ferie:"Ferie",
   permesso:"Permesso", sesw:"SE + Smartworking", seufc:"SE + Ufficio",
   uffse:"Ufficio + SE", permsw:"Permesso + SW", swperm:"SW + Permesso",
-  seperm:"SE + Permesso", permse:"Permesso + SE", ufcperm:"Ufficio + Permesso", permfc:"Permesso + Ufficio"
+  seperm:"SE + Permesso", permse:"Permesso + SE", ufcperm:"Ufficio + Permesso", permfc:"Permesso + Ufficio",
+  festivita:"Festività"
 };
 
 // ─── STATO ──────────────────────────────────────────────
@@ -1098,7 +1102,8 @@ async function exportExcel() {
   const TYPE_LABELS = {
     ufficio:'Ufficio', sw:'Smartworking', se:'Servizio Esterno',
     ferie:'Ferie', permesso:'Permesso', sesw:'SE + Smartworking', seufc:'SE + Ufficio',
-    uffse:'Ufficio + SE', permsw:'Permesso + SW', swperm:'SW + Permesso', seperm:'SE + Permesso', permse:'Permesso + SE', ufcperm:'Ufficio + Permesso', permfc:'Permesso + Ufficio'
+    uffse:'Ufficio + SE', permsw:'Permesso + SW', swperm:'SW + Permesso', seperm:'SE + Permesso', permse:'Permesso + SE', ufcperm:'Ufficio + Permesso', permfc:'Permesso + Ufficio',
+    festivita:'Festività'
   };
 
   // ── Styles ──
@@ -1115,6 +1120,7 @@ async function exportExcel() {
     se:{bg:'FEF3E2',fg:'6B3A0A'},     ferie:{bg:'D6F0D6',fg:'1A5C1A'},
     permesso:{bg:'B8DDB8',fg:'0D3B0D'}, sesw:{bg:'FFF0CC',fg:'5A3D00'},
     uffse:{bg:'E8D8F8',fg:'3A0070'}, permsw:{bg:'CCE8F0',fg:'003A50'}, swperm:{bg:'CCE8F0',fg:'003A50'}, seperm:{bg:'FFD8B8',fg:'5A1800'}, permse:{bg:'FFD8B8',fg:'5A1800'}, ufcperm:{bg:'D8E8D8',fg:'0A300A'}, permfc:{bg:'D8E8D8',fg:'0A300A'},
+    festivita:{bg:'FCE4EC',fg:'880E4F'},
     seufc:{bg:'FDE8CC',fg:'5A2D00'}
   };
   function sType(type) {
@@ -1155,7 +1161,7 @@ async function exportExcel() {
     return;
   }
 
-  const sortedMonths = validMonths.sort();
+  const sortedMonths = validMonths.sort().reverse();
 
   const usedSheetNames = new Set();
   sortedMonths.forEach(mKey => {
@@ -1180,7 +1186,7 @@ async function exportExcel() {
     // ── PRESENZE ──
     setCell(row, 0, '📋 PRESENZE', sTitle); row++;
 
-    const weekKeys = Object.keys(monthsPresence[mKey] || {}).sort();
+    const weekKeys = Object.keys(monthsPresence[mKey] || {}).sort().reverse();
     const allDayCols = [];
     weekKeys.forEach(wk => {
       const mon = new Date(wk);
