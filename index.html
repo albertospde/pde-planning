@@ -1207,7 +1207,7 @@ async function exportExcel() {
     // ── PRESENZE ──
     setCell(row, 0, '📋 PRESENZE', sTitle); row++;
 
-    const weekKeys = Object.keys(monthsPresence[mKey] || {}).sort().reverse();
+    const weekKeys = Object.keys(monthsPresence[mKey] || {}).sort();
     const allDayCols = [];
     weekKeys.forEach(wk => {
       const mon = new Date(wk);
