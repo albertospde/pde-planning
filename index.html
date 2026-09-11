@@ -469,6 +469,7 @@
     <div class="modal-actions">
       <button class="btn btn-danger" onclick="clearCell()">Rimuovi</button>
       <button class="btn btn-ghost" onclick="closeModal()">Annulla</button>
+      <button class="btn btn-primary" onclick="saveCell()">Salva</button>
     </div>
   </div>
 </div>
@@ -579,22 +580,22 @@ const PEOPLE = [
 const TABS = ["Presenze","Trasferte","Incontri Editori"];
 
 const TYPES = [
-  { key:"ufficio",  label:"🏢 Ufficio",          cls:"ufficio",  needsNote:false },
-  { key:"sw",       label:"🏠 Smartworking",      cls:"sw",       needsNote:false },
-  { key:"se",       label:"🚗 Servizio Esterno",  cls:"se",       needsNote:true  },
-  { key:"ferie",    label:"🌴 Ferie",             cls:"ferie",    needsNote:false },
-  { key:"permesso", label:"📋 Permesso",          cls:"permesso", needsNote:false },
-  { key:"sesw",     label:"🚗🏠 SE+SW",           cls:"sesw",     needsNote:true  },
-  { key:"seufc",    label:"🚗🏢 SE+Ufficio",      cls:"seufc",    needsNote:true  },
-  { key:"uffse",    label:"🏢🚗 Ufficio+SE",      cls:"uffse",    needsNote:true  },
-  { key:"permsw",   label:"📋🏠 Permesso+SW",     cls:"permsw",   needsNote:false },
-  { key:"swperm",   label:"🏠📋 SW+Permesso",     cls:"swperm",   needsNote:false },
-  { key:"seperm",   label:"🚗📋 SE+Permesso",     cls:"seperm",   needsNote:true  },
-  { key:"permse",   label:"📋🚗 Permesso+SE",     cls:"permse",   needsNote:true  },
-  { key:"ufcperm",  label:"🏢📋 Ufficio+Permesso",cls:"ufcperm",  needsNote:false },
-  { key:"permfc",   label:"📋🏢 Permesso+Ufficio",cls:"permfc",   needsNote:false },
-  { key:"festivita", label:"🎉 Festività",          cls:"festivita", needsNote:false },
-  { key:"perm104",   label:"📋 Permesso 104",       cls:"perm104",   needsNote:false },
+  { key:"ufficio",  label:"🏢 Ufficio",          cls:"ufficio"  },
+  { key:"sw",       label:"🏠 Smartworking",      cls:"sw"       },
+  { key:"se",       label:"🚗 Servizio Esterno",  cls:"se"       },
+  { key:"ferie",    label:"🌴 Ferie",             cls:"ferie"    },
+  { key:"permesso", label:"📋 Permesso",          cls:"permesso" },
+  { key:"sesw",     label:"🚗🏠 SE+SW",           cls:"sesw"     },
+  { key:"seufc",    label:"🚗🏢 SE+Ufficio",      cls:"seufc"    },
+  { key:"uffse",    label:"🏢🚗 Ufficio+SE",      cls:"uffse"    },
+  { key:"permsw",   label:"📋🏠 Permesso+SW",     cls:"permsw"   },
+  { key:"swperm",   label:"🏠📋 SW+Permesso",     cls:"swperm"   },
+  { key:"seperm",   label:"🚗📋 SE+Permesso",     cls:"seperm"   },
+  { key:"permse",   label:"📋🚗 Permesso+SE",     cls:"permse"   },
+  { key:"ufcperm",  label:"🏢📋 Ufficio+Permesso",cls:"ufcperm"  },
+  { key:"permfc",   label:"📋🏢 Permesso+Ufficio",cls:"permfc"   },
+  { key:"festivita", label:"🎉 Festività",          cls:"festivita" },
+  { key:"perm104",   label:"📋 Permesso 104",       cls:"perm104"   },
 ];
 
 const SHORT = {
@@ -881,8 +882,7 @@ function openModal(person,dayIdx) {
   document.getElementById('modalSub').textContent=DAY_NAMES[dayIdx]+' '+day.getDate()+' '+day.toLocaleDateString('it-IT',{month:'long'});
   const grid=document.getElementById('typeGrid');
   grid.innerHTML=TYPES.map(t=>`<div class="type-option ${t.cls}${entry&&entry.type===t.key?' selected':''}" onclick="selectType('${t.key}')">${t.label}</div>`).join('');
-  const selectedType=entry?TYPES.find(x=>x.key===entry.type):null;
-  document.getElementById('noteWrapper').style.display=(selectedType&&selectedType.needsNote)?'block':'none';
+  document.getElementById('noteWrapper').style.display='block';
   document.getElementById('noteInput').value=entry?(entry.note||''):'';
   document.getElementById('modalOverlay').classList.add('open');
 }
@@ -892,17 +892,7 @@ function selectType(key) {
   document.getElementById('typeGrid').querySelectorAll('.type-option').forEach(el=>el.classList.remove('selected'));
   const cls=TYPES.find(t=>t.key===key).cls;
   document.getElementById('typeGrid').querySelector('.type-option.'+cls).classList.add('selected');
-  const t=TYPES.find(x=>x.key===key);
-  if(t.needsNote) {
-    // show note field and wait for manual save
-    document.getElementById('noteWrapper').style.display='block';
-    document.getElementById('noteInput').focus();
-  } else {
-    // save immediately
-    document.getElementById('noteWrapper').style.display='none';
-    document.getElementById('noteInput').value='';
-    saveCell();
-  }
+  document.getElementById('noteInput').focus();
 }
 
 async function saveCell() {
