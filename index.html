@@ -375,6 +375,8 @@
 .pde-welcome .pw-txt { font-family: Montserrat, sans-serif; font-size: 12px; font-weight: 500; letter-spacing: .18em; text-transform: uppercase; color: #1f6fe5; }
 @media (max-width: 600px) { #pde-user-name { display: none; } }
 </style>
+<script>/* Dentro il PDE Hub (iframe) il menu utente lo ha già la barra del Hub (stesso account, stesso tema) */try{if(window.self!==window.top)document.documentElement.classList.add('pde-in-hub')}catch(e){document.documentElement.classList.add('pde-in-hub')}</script>
+<style>.pde-in-hub .pde-userwrap{display:none!important}#pde-hub-excel{display:none}.pde-in-hub #pde-hub-excel{display:flex!important}</style>
 </head>
 <body class="presenze-attiva">
 
@@ -405,7 +407,7 @@
     <button onclick="goToday()" style="width:auto;padding:0 10px;font-size:11px;letter-spacing:.04em;" title="Oggi">OGGI</button>
   </div>
   <div style="flex:1;display:flex;justify-content:flex-end;min-width:0;gap:8px;align-items:center;">
-    <div class="pde-userwrap"><button type="button" id="pde-userbtn"><svg viewBox="0 0 24 24"><path d="M12 12c2.7 0 4.8-2.1 4.8-4.8S14.7 2.4 12 2.4 7.2 4.5 7.2 7.2 9.3 12 12 12zm0 2.4c-3.2 0-9.6 1.6-9.6 4.8v2.4h19.2v-2.4c0-3.2-6.4-4.8-9.6-4.8z"/></svg><span id="pde-user-name">Account</span><span aria-hidden="true">▾</span></button><div id="pde-usermenu"><div class="pum-email" id="pde-user-email"></div><button type="button" class="pum-item" onclick="exportExcel()">⬇ Esporta Excel</button><button type="button" class="pum-item" onclick="doChangePassword()">🔑 Cambia password</button><button type="button" class="pum-item danger" onclick="doLogout()">Esci</button></div></div>
+    <button type="button" id="pde-hub-excel" onclick="exportExcel()" title="Esporta Excel" style="align-items:center;gap:6px;width:auto;height:34px;margin:0;padding:0 12px;border-radius:8px;cursor:pointer;font-size:13px;font-weight:500;background:rgba(255,255,255,.10);border:1px solid rgba(255,255,255,.25);color:#fff">⬇ Esporta Excel</button><div class="pde-userwrap"><button type="button" id="pde-userbtn"><svg viewBox="0 0 24 24"><path d="M12 12c2.7 0 4.8-2.1 4.8-4.8S14.7 2.4 12 2.4 7.2 4.5 7.2 7.2 9.3 12 12 12zm0 2.4c-3.2 0-9.6 1.6-9.6 4.8v2.4h19.2v-2.4c0-3.2-6.4-4.8-9.6-4.8z"/></svg><span id="pde-user-name">Account</span><span aria-hidden="true">▾</span></button><div id="pde-usermenu"><div class="pum-email" id="pde-user-email"></div><button type="button" class="pum-item" onclick="exportExcel()">⬇ Esporta Excel</button><button type="button" class="pum-item" onclick="doChangePassword()">🔑 Cambia password</button><button type="button" class="pum-item danger" onclick="doLogout()">Esci</button></div></div>
   </div>
 </header>
 
