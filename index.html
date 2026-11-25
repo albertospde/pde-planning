@@ -353,6 +353,28 @@
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;700&display=swap">
 <link rel="stylesheet" href="https://albertospde.github.io/pde-hub/assets/pde-app-logo.css">
 <style>.pde-logo-box{background:#fff;border-radius:10px;padding:7px 14px;display:inline-flex;align-items:center;line-height:0}</style>
+
+<style>
+/* ── Barra stretta + menu utente + benvenuto (stile PDE Hub, nov 2026) ── */
+.pde-userwrap { position: relative; flex-shrink: 0; margin-left: auto; }
+#pde-userbtn { display: flex; align-items: center; gap: 8px; width: auto; height: 34px; margin: 0;
+  padding: 0 12px; border-radius: 8px; cursor: pointer; font-size: 13px; font-weight: 500;
+  background: rgba(255,255,255,.10); border: 1px solid rgba(255,255,255,.25); color: #fff; }
+#pde-userbtn:hover { background: rgba(255,255,255,.18); }
+#pde-userbtn svg { width: 15px; height: 15px; fill: currentColor; }
+#pde-usermenu { display: none; position: absolute; right: 0; top: calc(100% + 8px); min-width: 240px; z-index: 1000;
+  background: #fff; color: #16204a; border-radius: 12px; box-shadow: 0 16px 40px rgba(0,0,0,.35); overflow: hidden; text-align: left; }
+#pde-usermenu.open { display: block; }
+#pde-usermenu .pum-email { padding: 12px 16px; font-size: 12px; color: #5a6388; border-bottom: 1px solid #e3e8f2; word-break: break-all; }
+#pde-usermenu .pum-item { display: flex; align-items: center; gap: 10px; width: 100%; height: auto; margin: 0; padding: 11px 16px;
+  border: 0; border-radius: 0; background: #fff; color: #16204a; font-size: 13px; font-weight: 500; letter-spacing: normal; text-transform: none; cursor: pointer; text-align: left; }
+#pde-usermenu .pum-item:hover { background: #eef3fb; }
+#pde-usermenu .pum-item.danger { color: #c43d3d; border-top: 1px solid #e3e8f2; }
+.pde-welcome { display: flex; flex-direction: column; align-items: center; gap: 4px; background: #fff; border-radius: 16px;
+  padding: 14px 22px 16px; margin: 0 auto 18px; width: fit-content; max-width: 100%; box-shadow: 0 2px 12px rgba(0,0,0,.14); }
+.pde-welcome .pw-txt { font-family: Montserrat, sans-serif; font-size: 12px; font-weight: 500; letter-spacing: .18em; text-transform: uppercase; color: #1f6fe5; }
+@media (max-width: 600px) { #pde-user-name { display: none; } }
+</style>
 </head>
 <body class="presenze-attiva">
 
@@ -374,7 +396,6 @@
 
 <header class="app-header">
   <div style="display:flex;align-items:center;gap:12px;flex:1;min-width:0;">
-    <span class="pde-logo-box" style="padding:5px 12px;flex-shrink:0"><div class="pde-logo" role="img" aria-label="PDE Planning" style="font-size:12px"><div class="pl-text"><div class="pl-name"><b>PDE</b><span>PLANNING</span></div><div class="pl-tag" style="letter-spacing:.08em"><i class="c0">PRESENZE.</i><em>I</em><i class="c0">TRASFERTE.</i><em>I</em><i class="c1">INCONTRI.</i><em>I</em><i class="c1">FIERE.</i><em>I</em><i class="c2">CENE E HOTEL.</i></div></div><div class="pl-wing"></div></div></span>
     <span style="color:#fff;font-size:15px;font-weight:600;letter-spacing:0.03em;white-space:nowrap;">Pianificazioni PDE</span>
   </div>
   <div class="week-nav" id="weekNavBar" style="position:absolute;left:50%;transform:translateX(-50%);display:flex;align-items:center;gap:10px;">
@@ -384,9 +405,7 @@
     <button onclick="goToday()" style="width:auto;padding:0 10px;font-size:11px;letter-spacing:.04em;" title="Oggi">OGGI</button>
   </div>
   <div style="flex:1;display:flex;justify-content:flex-end;min-width:0;gap:8px;align-items:center;">
-    <button onclick="exportExcel()" style="width:auto;padding:0 14px;height:32px;font-size:11px;font-weight:600;letter-spacing:.05em;background:#2e7d32;border:1px solid #1b5e20;color:#fff;border-radius:6px;cursor:pointer;font-family:'DM Sans',sans-serif;" onmouseover="this.style.background='#388e3c'" onmouseout="this.style.background='#2e7d32'" title="Esporta Excel">&#128190; EXCEL</button>
-    <button onclick="doChangePassword()" style="width:auto;padding:0 10px;height:32px;font-size:11px;font-weight:500;background:rgba(255,255,255,0.15);border:1px solid rgba(255,255,255,0.25);color:#fff;border-radius:6px;cursor:pointer;font-family:'DM Sans',sans-serif;" title="Cambia password">&#128274;</button>
-    <button onclick="doLogout()" style="width:auto;padding:0 14px;height:32px;font-size:11px;font-weight:600;letter-spacing:.05em;background:rgba(255,255,255,0.15);border:1px solid rgba(255,255,255,0.25);color:#fff;border-radius:6px;cursor:pointer;font-family:'DM Sans',sans-serif;" onmouseover="this.style.background='rgba(255,255,255,0.28)'" onmouseout="this.style.background='rgba(255,255,255,0.15)'" title="Esci">ESCI</button>
+    <div class="pde-userwrap"><button type="button" id="pde-userbtn"><svg viewBox="0 0 24 24"><path d="M12 12c2.7 0 4.8-2.1 4.8-4.8S14.7 2.4 12 2.4 7.2 4.5 7.2 7.2 9.3 12 12 12zm0 2.4c-3.2 0-9.6 1.6-9.6 4.8v2.4h19.2v-2.4c0-3.2-6.4-4.8-9.6-4.8z"/></svg><span id="pde-user-name">Account</span><span aria-hidden="true">▾</span></button><div id="pde-usermenu"><div class="pum-email" id="pde-user-email"></div><button type="button" class="pum-item" onclick="exportExcel()">⬇ Esporta Excel</button><button type="button" class="pum-item" onclick="doChangePassword()">🔑 Cambia password</button><button type="button" class="pum-item danger" onclick="doLogout()">Esci</button></div></div>
   </div>
 </header>
 
@@ -396,6 +415,7 @@
 
   <!-- ── PRESENZE VIEW ── -->
   <div class="view active" id="view-0">
+    <div class="pde-welcome"><span class="pw-txt">Benvenuto in</span><div class="pde-logo" role="img" aria-label="PDE Planning" style="font-size:22px"><div class="pl-text"><div class="pl-name"><b>PDE</b><span>PLANNING</span></div><div class="pl-tag" style="letter-spacing:.08em"><i class="c0">PRESENZE.</i><em>I</em><i class="c0">TRASFERTE.</i><em>I</em><i class="c1">INCONTRI.</i><em>I</em><i class="c1">FIERE.</i><em>I</em><i class="c2">CENE E HOTEL.</i></div></div><div class="pl-wing"></div></div></div>
     <div class="friday-banner" id="fridayBanner">
       <span>📅 <strong>È venerdì!</strong> Ricorda di compilare le presenze per la prossima settimana.</span>
       <button onclick="document.getElementById('fridayBanner').style.display='none'" title="Chiudi">✕</button>
@@ -1359,6 +1379,24 @@ async function doChangePassword() {
     document.getElementById('loginScreen').style.display = 'flex';
     setTimeout(()=>document.getElementById('emailInput').focus(), 100);
   }
+})();
+</script>
+
+<script>
+/* Menu utente: email letta dalla sessione Supabase già salvata nel browser (stesso progetto delle app PDE) */
+(function () {
+  const btn = document.getElementById('pde-userbtn'), menu = document.getElementById('pde-usermenu');
+  if (!btn || !menu) return;
+  btn.addEventListener('click', e => { e.stopPropagation(); menu.classList.toggle('open'); });
+  document.addEventListener('click', e => { if (!e.target.closest('.pde-userwrap')) menu.classList.remove('open'); });
+  menu.addEventListener('click', e => { if (e.target.closest('.pum-item')) menu.classList.remove('open'); });
+  function aggiorna() {
+    let email = '';
+    try { email = (JSON.parse(localStorage.getItem('sb-tdflwenlylhctxssatax-auth-token') || 'null') || {}).user?.email || ''; } catch (e) {}
+    document.getElementById('pde-user-email').textContent = email;
+    document.getElementById('pde-user-name').textContent = email ? email.split('@')[0] : 'Account';
+  }
+  aggiorna(); setInterval(aggiorna, 3000); window.addEventListener('storage', aggiorna);
 })();
 </script>
 </body>
